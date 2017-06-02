@@ -51,10 +51,7 @@
             android:layout_height="wrap_content"
             android:onClick="clreanInmain"
             android:text="清除绑定主进程" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="清除绑定子进程到主进程" />
+      
 
     </GridLayout>
 
