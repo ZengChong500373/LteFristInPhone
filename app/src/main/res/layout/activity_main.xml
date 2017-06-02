@@ -5,30 +5,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.jyh.lte.MainActivity">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mainBind2lte"
-        android:text="mainBind2lte" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="maingetData"
-        android:text="maingetData" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="bind2lte"
-        android:text="serviceBind2lte" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="getDataInService"
-        android:text="getDataInService" />
 
 
+    <GridLayout
+        android:rowCount="4"
+        android:columnCount="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="mainBind2lte"
+            android:text="主进程绑定之后子进程绑定" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="maingetData"
+            android:text="主进程获取数据" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="bind2lte"
+            android:text="手动绑定子进程" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getDataInServiceOne"
+            android:text="service1获取数据 " />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getDataInServiceTwo"
+            android:text="service2获取数据 " />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="cleanTv"
+            android:text="清空textView " />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clreanInmain"
+            android:text="清除绑定主进程" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清除绑定子进程到主进程" />
+
+    </GridLayout>
 
 
     <TextView

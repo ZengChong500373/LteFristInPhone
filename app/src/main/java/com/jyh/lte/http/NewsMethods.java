@@ -18,10 +18,6 @@ import retrofit2.http.Path;
  */
 public interface NewsMethods {
 
-    //headline/T1348647909107/0-20.html
-    @GET("{type}/{id}/{position}-20.html")
-    Observable<String> getHeadlinesList(@Path("type") String type, @Path("id") String id, @Path("position") String position);
-
     @GET("headline/T1348647909107/0-20.html")
     Call<JsonObject> getDatafromNet();
 
