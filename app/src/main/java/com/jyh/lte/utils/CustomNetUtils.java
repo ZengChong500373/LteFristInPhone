@@ -142,6 +142,9 @@ public class CustomNetUtils {
     public static void cleanLteInMainProcess() {
         ConnectivityManager conMgr = (ConnectivityManager) JyhTapp.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         cleanLte(conMgr);
+        if (mCallback==null){
+            return;
+        }
         conMgr.unregisterNetworkCallback(mCallback);
         mCallback = null;
         Intent intent = new Intent();

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clreanInmain(View view) {
-        CustomNetUtils.cleanLteInMainProcess();
+       CustomNetUtils.cleanLteInMainProcess();
     }
 
     public void bindSer() {
