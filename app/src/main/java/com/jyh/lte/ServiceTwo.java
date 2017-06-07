@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.jyh.lte.utils.CustomNetUtils;
+import com.jyh.lte.utils.MyLog;
 import com.jyh.lte.utils.JyhConstant;
 
 /**
@@ -42,9 +43,11 @@ public class ServiceTwo extends Service {
             String action = intent.getAction();
             if (JyhConstant.BIND_IN_PROCESS.equals(action)) {
                 Boolean bindToMobileNet = CustomNetUtils.bindToMobileNet(JyhTapp.getContext());
-                Log.i("jyh_two","bindToMobileNet"+bindToMobileNet);
-            }else if(JyhConstant.UNBIND_IN_PROCESS.equals(action)){
-                CustomNetUtils.cleanLte();
+                MyLog.write2File("bind Service two= " + bindToMobileNet);
+                Log.i("jyh_two", "bindToMobileNet" + bindToMobileNet);
+            } else if (JyhConstant.UNBIND_IN_PROCESS.equals(action)) {
+                Boolean unBind = CustomNetUtils.cleanLte();
+                MyLog.write2File("unbind Service two= " + unBind);
             }
         }
     }

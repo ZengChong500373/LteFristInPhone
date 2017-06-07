@@ -6,6 +6,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.jyh.lte.utils.CrashHandler;
+import com.jyh.lte.utils.MyLog;
+
 public class JyhTapp extends Application {
 	private static Context mContext;
 
@@ -14,6 +16,7 @@ public class JyhTapp extends Application {
 		super.onCreate();
 		this.mContext = getApplicationContext();
 		CrashHandler.getInstance().init(mContext);
+		MyLog.dele();
 	}
 
 	public static Context getContext() {

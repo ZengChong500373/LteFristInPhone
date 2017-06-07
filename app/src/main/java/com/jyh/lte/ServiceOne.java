@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.jyh.lte.http.Network;
 import com.jyh.lte.utils.CustomNetUtils;
 import com.jyh.lte.utils.CrashHandler;
+import com.jyh.lte.utils.MyLog;
 import com.jyh.lte.utils.JyhConstant;
 
 import retrofit2.Call;
@@ -96,6 +97,7 @@ public class ServiceOne extends Service {
                     ServiceOneDataListener listener = mRemotelist
                             .getBroadcastItem(i);
                     listener.allDataArrive("bind2Lte=" + bin);
+
                 }
                 mRemotelist.finishBroadcast();
             } catch (Exception e) {
@@ -134,6 +136,7 @@ public class ServiceOne extends Service {
                         ServiceOneDataListener listener = mRemotelist
                                 .getBroadcastItem(i);
                         listener.allDataArrive("JyhBind2LTeInServiceOne=" + bindToMobileNet);
+                        MyLog.write2File("bind Service one= "+bindToMobileNet);
                     }
                     mRemotelist.finishBroadcast();
                 } catch (Exception e) {
@@ -141,7 +144,8 @@ public class ServiceOne extends Service {
                     CrashHandler.getInstance().handleException(e);
                 }
             }else if(JyhConstant.UNBIND_IN_PROCESS.equals(action)){
-                CustomNetUtils.cleanLte();
+            Boolean unbind=    CustomNetUtils.cleanLte();
+                MyLog.write2File("unbind Service one= "+unbind);
             }
         }
     }

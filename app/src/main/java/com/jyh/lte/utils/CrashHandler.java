@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 
+import com.jyh.lte.JyhTapp;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -179,7 +181,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			if (Environment.getExternalStorageState().equals(
 					Environment.MEDIA_MOUNTED)) {
 				//��ȡ�ļ����·��
-				String path = Environment.getExternalStorageDirectory()
+				String path = JyhTapp.getContext().getExternalFilesDir(null).getAbsolutePath()
 						+ "/crashinfo/";
 				//�����ļ��к��ļ�
 				File dir = new File(path);

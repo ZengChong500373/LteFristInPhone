@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -23,6 +24,7 @@ import com.jyh.lte.http.Network;
 import com.jyh.lte.utils.BindLteListener;
 import com.jyh.lte.utils.CustomNetUtils;
 import com.jyh.lte.utils.CrashHandler;
+import com.jyh.lte.utils.MyLog;
 import com.jyh.lte.utils.JyhConstant;
 import com.jyh.lte.utils.ToastUtils;
 
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv_content;
 
     private NetChangBrocast brocast;
+    private Boolean isLteFrist = false;
+    private static int sys_count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,30 +54,39 @@ public class MainActivity extends AppCompatActivity {
         tv_content = (TextView) findViewById(R.id.tv_content);
         bindSer();
         initBrocast();
+        heihei();
+    }
+
+    private void heihei() {
+        ConnectivityManager conMgr = (ConnectivityManager) JyhTapp.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = conMgr.getActiveNetworkInfo();
+
+
     }
 
     public void initBrocast() {
         IntentFilter intenFilter = new IntentFilter();
         intenFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        intenFilter.addAction(JyhConstant.UNBIND_IN_PROCESS);
         intenFilter.addAction(JyhConstant.REBIND_IN_PROCESS);
-
         brocast = new NetChangBrocast();
         registerReceiver(brocast, intenFilter);
     }
 
     public void mainBind2lte(View view) {
-        useLte();
+        isLteFrist = true;
+        MyLog.write2File("mainBind2lte");
+        useLte("mainBind2lte");
     }
 
     public void maingetData(View view) {
+        MyLog.write2File("mainBind2lte");
         Network.getNews().getDatafromNet().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response == null) return;
-                tv_content.setText(response.body().toString());
+                if (response != null&&response.body()!=null){
+                    tv_content.setText(response.body().toString());
+                }
             }
-
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 tv_content.setText(t.toString());
@@ -112,11 +125,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cleanTv(View view) {
+        MyLog.write2File("cleanTv");
         tv_content.setText("");
     }
 
     public void clreanInmain(View view) {
-       CustomNetUtils.cleanLteInMainProcess();
+        isLteFrist = false;
+        MyLog.write2File("clreanInmain");
+        CustomNetUtils.cleanLteInMainProcess(false);
     }
 
     public void bindSer() {
@@ -148,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceOneDataListener onDataListener = new ServiceOneDataListener.Stub() {
         @Override
         public void allDataArrive(String allData) throws RemoteException {
+            MyLog.write2File("ServiceOneDataListener onDataListener_allDataArrive_allData=" + allData);
             Message msg = jyh.obtainMessage();
             Bundle b = new Bundle();
             b.putString("allData", allData);
@@ -160,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
             tv_content.setText(msg.getData().getString("allData"));
             Log.e("jyh_handler", "allData" + msg.getData().getString("allData"));
         }
-
         ;
 
     };
@@ -170,25 +186,33 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             ToastUtils.show(action);
+            MyLog.write2File("NetChangBrocast=" + action + " sys_count" + sys_count);
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 tv_content.setText(action);
+                android.net.Network net = CustomNetUtils.getBoundNet();
+                if (net == null && isLteFrist&&CustomNetUtils.getIsRebingOnTheWay()&&CustomNetUtils.getIsActionSysBrocast()==false) {
+                    CustomNetUtils.setIsActionSysBrocast(true);
+                    useLte("ConnectivityManager.CONNECTIVITY_ACTION 再绑定"+" sys_count" + sys_count);
+                }
                 Log.e("jyh", "NetChangBrocast");
-            } else if (JyhConstant.UNBIND_IN_PROCESS.equals(action) || JyhConstant.REBIND_IN_PROCESS.equals(action)) {
+            } else if (JyhConstant.REBIND_IN_PROCESS.equals(action)) {
                 Log.i("jyh_NetChangBrocast", "1");
                 tv_content.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Log.i("jyh_NetChangBrocast", "2");
-                        useLte();
+                        CustomNetUtils.setIsRebingOnTheWay(true);
+                        useLte("广播来了重 建通道延迟了0.05秒" + " sys_count" + sys_count);
                     }
-                }, 200);
+                }, 50);
             }
-
+            sys_count++;
         }
     }
 
-    public void useLte() {
-        CustomNetUtils.requestMobileNet(MainActivity.this, new BindLteListener() {
+    public void useLte(String name) {
+        MyLog.write2File("useLte " + name);
+        CustomNetUtils.requestMobileNet(new BindLteListener() {
             @Override
             public void BindForResult(final String methodname, final Boolean result) {
                 {
@@ -202,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void accept(Boolean s) throws Exception {
                             tv_content.setText(methodname + " " + s.toString());
-                            if (result&&"onAvailable".equals(methodname)) {
+                            if (result && "onAvailable".equals(methodname)) {
                                 Intent intent = new Intent();
                                 intent.setAction(JyhConstant.BIND_IN_PROCESS);
                                 sendBroadcast(intent);
