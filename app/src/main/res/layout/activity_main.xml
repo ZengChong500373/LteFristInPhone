@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="mainBind2lte"
-            android:text="主进程绑定之后子进程绑定" />
+            android:text="优先使用lte网络" />
 
         <Button
             android:layout_width="wrap_content"
@@ -50,8 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="clreanInmain"
-            android:text="清除绑定主进程" />
-      
+            android:text="解除优先使用lte网络" />
+
 
     </GridLayout>
 
