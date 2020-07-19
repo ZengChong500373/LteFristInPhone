@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.jyh.lte.utils.CustomNetUtils;
@@ -19,7 +19,6 @@ import com.jyh.lte.utils.JyhConstant;
  */
 
 public class ServiceTwo extends Service {
-    private Bind2LTeInServiceTwoReceiver broadcast;
 
     @Override
     public void onCreate() {
@@ -31,12 +30,12 @@ public class ServiceTwo extends Service {
         IntentFilter intenFilter = new IntentFilter();
         intenFilter.addAction(JyhConstant.BIND_IN_PROCESS);
         intenFilter.addAction(JyhConstant.UNBIND_IN_PROCESS);
-        broadcast = new Bind2LTeInServiceTwoReceiver();
+        Bind2LTeInServiceTwoReceiver broadcast = new Bind2LTeInServiceTwoReceiver();
         registerReceiver(broadcast, intenFilter);
 
     }
 
-    public class Bind2LTeInServiceTwoReceiver extends BroadcastReceiver {
+    public static class Bind2LTeInServiceTwoReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
